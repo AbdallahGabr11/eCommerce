@@ -1,0 +1,263 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Organic Green Tea",
+      "description": "A soothing blend of organic green tea leaves, rich in antioxidants and natural flavors.",
+      "image": "https://th.bing.com/th/id/OIP.Lnfn5FiX5-B2l6yLhMfdIwHaHa?rs=1&pid=ImgDetMain",
+      "price": 15.99,
+      "quantity": 100,
+      "brand": "Organic Tea Co.",
+      "supplier": {
+        "name": "Tea Supplier Inc.",
+        "description": "We specialize in providing high-quality organic teas sourced from sustainable farms.",
+        "contactEmail": "info@teasupplier.com",
+        "contactPhone": "+1234567890"
+      }
+    },
+    {
+      "id": "2",
+      "name": "Yoga Mat",
+      "description": "Eco-friendly, non-slip yoga mat perfect for all levels of yoga practitioners.",
+      "image": "https://th.bing.com/th/id/R.17d04ce1d06643589fb434e394458778?rik=5fKGK9G%2fsmCMpg&pid=ImgRaw&r=0",
+      "price": 34.99,
+      "quantity": "509",
+      "brand": "EcoYoga",
+      "supplier": {
+        "name": "Yoga Supplies Co.",
+        "description": "Your one-stop shop for all your yoga needs, offering eco-friendly and sustainable products.",
+        "contactEmail": "sales@yogasupplies.com",
+        "contactPhone": "+1234567890"
+      }
+    },
+    {
+      "id": "3",
+      "name": "Bluetooth Speaker",
+      "description": "Portable Bluetooth speaker with 360-degree sound and 24-hour playtime.",
+      "image": "https://th.bing.com/th/id/OIP.cZBifRXKCvsZguVf0_Q_CAHaHa?rs=1&pid=ImgDetMain",
+      "price": 89.99,
+      "quantity": 30,
+      "brand": "SoundWave",
+      "supplier": {
+        "name": "Audio Gear Ltd.",
+        "description": "Leading provider of premium audio equipment, delivering unparalleled sound quality and innovation.",
+        "contactEmail": "info@audiogear.com",
+        "contactPhone": "+1234567890"
+      }
+    },
+    {
+      "id": "5",
+      "name": "Office Chair",
+      "description": "Home Office Chair Ergonomic Desk Chair Mesh Computer Chair with Lumbar Support Armrest Executive Rolling Swivel Adjustable Mid Back Task Chair for Women Adults, Black.",
+      "image": "https://m.media-amazon.com/images/I/716tq9Y8WOL._AC_SL1500_.jpg",
+      "price": 199.99,
+      "quantity": 20,
+      "brand": "ErgoChairs",
+      "supplier": {
+        "name": "Furniture Emporium",
+        "description": "Your destination for stylish and ergonomic office furniture solutions.",
+        "contactEmail": "info@furnitureemporium.com",
+        "contactPhone": "+1234567890"
+      }
+    },
+    {
+      "id": "1468",
+      "name": "test0",
+      "description": "as",
+      "image": "https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg",
+      "price": "16",
+      "quantity": "82",
+      "brand": "as",
+      "supplier": {
+        "name": "s",
+        "description": "as",
+        "contactEmail": "as@a",
+        "contactPhone": "+200"
+      }
+    },
+    {
+      "id": "12",
+      "name": "test1",
+      "description": "as",
+      "image": "https://m.media-amazon.com/images/I/51uOxm5eLWL._AC_UF1000,1000_QL80_.jpg",
+      "price": "16",
+      "quantity": "82",
+      "brand": "as",
+      "supplier": {
+        "name": "s",
+        "description": "as",
+        "contactEmail": "as@a",
+        "contactPhone": "+200"
+      }
+    },
+    {
+      "id": "146428",
+      "name": "test2",
+      "description": "as",
+      "image": "https://www.adobe.com/express/feature/image/remove-background/jpg-to-png/media_1b0ad89a4a5ad233f5708e21b5998d6638cb07929.png",
+      "price": "16",
+      "quantity": "82",
+      "brand": "as",
+      "supplier": {
+        "name": "s",
+        "description": "as",
+        "contactEmail": "as@a",
+        "contactPhone": "+200"
+      }
+    },
+    {
+      "id": "146128",
+      "name": "test3",
+      "description": "as",
+      "image": "https://maslamanionline.com/image/cache/catalog/products/samsung/8806092793750/8806092793750-800x800.jpg",
+      "price": "16",
+      "quantity": "82",
+      "brand": "as",
+      "supplier": {
+        "name": "s",
+        "description": "as",
+        "contactEmail": "as@a",
+        "contactPhone": "+200"
+      }
+    },
+    {
+      "id": "14618",
+      "name": "test4",
+      "description": "as",
+      "image": "https://cdnprod.mafretailproxy.com/sys-master-root/h64/hca/14623473664030/319144_main.jpg_480Wx480H",
+      "price": "16",
+      "quantity": "82",
+      "brand": "as",
+      "supplier": {
+        "name": "s",
+        "description": "as",
+        "contactEmail": "as@a",
+        "contactPhone": "+200"
+      }
+    },
+    {
+      "id": "14682",
+      "name": "test5",
+      "description": "as",
+      "image": "https://mobaili.com/image/cache/catalog/1-1Mobile/81eJPRqZCfL._AC_SX425_-300x300.jpg",
+      "price": "16",
+      "quantity": "82",
+      "brand": "as",
+      "supplier": {
+        "name": "s",
+        "description": "as",
+        "contactEmail": "as@a",
+        "contactPhone": "+200"
+      }
+    },
+    {
+      "id": "68",
+      "name": "test6",
+      "description": "as",
+      "image": "https://i.ytimg.com/vi/rI-tyxYME08/oar2.jpg",
+      "price": "16",
+      "quantity": "82",
+      "brand": "as",
+      "supplier": {
+        "name": "s",
+        "description": "as",
+        "contactEmail": "as@a",
+        "contactPhone": "+200"
+      }
+    },
+    {
+      "id": "168",
+      "name": "test7",
+      "description": "as",
+      "image": "https://r2media.horizondm.com/magefan_blog/anker-earphone-life-p3-a3939011-black-1.jpg",
+      "price": "16",
+      "quantity": "82",
+      "brand": "as",
+      "supplier": {
+        "name": "s",
+        "description": "as",
+        "contactEmail": "as@a",
+        "contactPhone": "+200"
+      }
+    },
+    {
+      "id": "07a5",
+      "name": "asd",
+      "description": "asd",
+      "image": "https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg",
+      "price": "123",
+      "quantity": "23",
+      "brand": "asd",
+      "supplier": {
+        "name": "asd",
+        "description": "asd",
+        "contactEmail": "as@as",
+        "contactPhone": "+23"
+      }
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "isAdmin": true,
+      "email": "admin1@admin",
+      "password": "1234",
+      "fName": "admin",
+      "lName": "admin1",
+      "telephone": "+12345678909",
+      "address": "egypt, cairo, x street, Building 4"
+    },
+    {
+      "id": "2",
+      "isAdmin": false,
+      "email": "test@test",
+      "password": "test",
+      "fName": "aasd",
+      "lName": "s",
+      "telephone": "+1234567890",
+      "address": "egypt, cairo, x street, Building 3"
+    },
+    {
+      "id": "3",
+      "isAdmin": false,
+      "email": "anormal5@norma",
+      "password": "1234",
+      "fName": "d",
+      "lName": "s",
+      "telephone": "+1234567890",
+      "address": "egypt, cairo, x street, Building 3",
+      "cart": {}
+    },
+    {
+      "id": "4",
+      "email": "normal52@norma12",
+      "password": "123432",
+      "fName": "a",
+      "lName": "d",
+      "telephone": "+1234567890a",
+      "address": "egypt, cairo, x street, Building 3"
+    },
+    {
+      "id": "5",
+      "isAdmin": false,
+      "email": "normal5@normal",
+      "password": "1234",
+      "fName": "f",
+      "lName": "l",
+      "telephone": "+1234567890",
+      "address": "egypt, cairo, x street, Building 3",
+      "cart": {}
+    },
+    {
+      "id": "41ab",
+      "isAdmin": false,
+      "password": "asas",
+      "email": "sad@dsa",
+      "fName": "a",
+      "lName": "sad",
+      "telephone": "s",
+      "address": "sa",
+      "cart": {}
+    }
+  ]
+}
