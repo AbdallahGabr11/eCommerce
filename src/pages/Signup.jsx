@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { userContext } from '../App';
 
 
-const Signup = () => {
+const Signup = ({addUser}) => {
   const [user, setUser] = useContext(userContext);
   const isAdmin='user';
   const [password, setPassword] = useState('');
@@ -19,7 +19,7 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
 
     const newUser = {
@@ -33,39 +33,25 @@ const Signup = () => {
       cart:{
       },
     };
-
-    const fetchUsers = async () => {
+    
       try {
-        const res = await fetch('/api/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newUser),
-        });
-          
+          const res =await addUser(newUser);
           if (res.ok) {
               // If response status is within the 200-299 range, it means success
-              const data = await res.json();
-              toast.success('User Registered Successfully');
-
+              toast.success('You Registered Successfully');
+              setUser(newUser);
               navigate('/');
           } else {
               // If response status indicates an error, handle it here
               const errorData = await res.json(); // Parse the response JSON
               const errorMessage = errorData.error; // Extract the error message
               setShowInvalidMessage(errorMessage);
-              console.log(errorMessage);
-
+              // console.log(errorMessage);
           }
       } catch (error) {
           // Handle network errors or other exceptions here
           setShowInvalidMessage('Error fetching data: ' + error.message);
       }
-  };
-  
-    fetchUsers();
-    //setUser(newUser);
 
     return ;
   };
@@ -173,7 +159,7 @@ const Signup = () => {
                                     
                                 </p>
                             )}
-              <button type="submit" className="w-full text-white bg-black hover:bg-black focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-700 dark:hover:bg-zinc-700 dark:focus:ring-primary-800">Create an account</button>
+              <button type="submit" className="w-full text-white bg-blue-700 hover:hover:bg-zinc-700 focus:ring-4 focus:outline-none focus:ring-primary-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Create an account</button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account? <Link to="/Login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</Link>
               </p>

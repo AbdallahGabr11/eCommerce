@@ -5,8 +5,6 @@ import { toast } from 'react-toastify';
 import { userContext } from '../App';
 
 
-
-
 const Login = () => {
     const [User, setUser] = useContext(userContext);
     //const [users, setUsers] = useState([]);
@@ -16,40 +14,13 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     const fetchUsers = async () => {
-    //       const apiUrl = '/api/login'; 
-    //       try {
-    //         const res = await fetch(apiUrl);
-    //         const data = await res.json();
-    //         setUsers(data);
-    //       } catch (error) {
-    //         //console.log('Error fetching data', error);
-    //         setShowInvalidMessage(true);
-    //       }
-    //     };
-    
-    //     fetchUsers();
-    // }, []);
-
-
-    const submitForm = (e ) => {
+    const submitForm = async (e) => {
         e.preventDefault();
-        const newUser = {
+        const user = {
             password,
             email,
             
           };
-        // const user = users.find(u => u.email.toString() === email);
-
-        // if (user === undefined || user.password != password) {
-        //    // setShowInvalidMessage(true); // Show invalid message if user is undefined
-        // } else {  
-        // //   setIsLogged(true);
-        // setUser(user);
-
-
-        const fetchUsers = async () => {
             const apiUrl = '/api/login'; 
             try {
                 const res = await fetch(apiUrl , {
@@ -57,7 +28,7 @@ const Login = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(newUser),
+                    body: JSON.stringify(user),
                 });
                 
                 if (res.ok) {
@@ -69,8 +40,7 @@ const Login = () => {
                         navigate('/');
                     }else{
                         navigate('/Admin');
-                    }
-                    
+                    }    
                 } 
                 else {
                     // If response status indicates an error, handle it here
@@ -81,11 +51,7 @@ const Login = () => {
             } catch (error) {
                 // Handle network errors or other exceptions here
                 setShowInvalidMessage('Error fetching data: ' + error.message);
-            }
-        };
-        
-        fetchUsers();
-        
+            }     
     };
 
     return (
@@ -142,7 +108,7 @@ const Login = () => {
                                     
                                 </p>
                             )}
-                            <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-700 dark:hover:bg-zinc-700 dark:focus:ring-primary-800">Sign in</button>
+                            <button type="submit" className="w-full text-white bg-blue-700 hover:hover:bg-zinc-700 focus:ring-4 focus:outline-none focus:ring-primary-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Don’t have an account yet? <Link to="/Signup" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
                             </p>

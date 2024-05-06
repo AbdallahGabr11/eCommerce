@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { userContext } from '../App';
 
-const AddProduct = () => {
+const AddProduct = ({addProduct, fetchProducts}) => {
   const [user, setUser] = useContext(userContext);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -41,21 +41,9 @@ const AddProduct = () => {
     };
     const handleSubmit = async (newProduct) => {
       try {
-        await submitProduct(newProduct);
+        await addProduct(newProduct);
         toast.success('Product Added Successfully');
-        const fetchProducts = async () => {
-          const apiUrl = '/api/user/products'; 
-          try {
-            const res = await fetch(apiUrl);
-            const data = await res.json();
-            setProducts(data.products);
-          } catch (error) {
-            console.log('Error fetching products', error);
-          }
-        };
-        // Fetch products again to include the newly added one
-        fetchProducts();
-        // Navigate to '/Admin'
+        await setProducts(fetchProducts());
         navigate('/Admin');
       } catch (error) {
         console.error('Error adding product:', error);
@@ -63,23 +51,6 @@ const AddProduct = () => {
       }
     };
     
-    const submitProduct = async (newProduct) => {
-      try {
-        const res = await fetch('/api/admin/addProduct', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newProduct),
-        });
-        if (!res.ok) {
-          throw new Error('Failed to add product');
-        }
-        return await res.json();
-      } catch (error) {
-        throw new Error('Failed to add product');
-      }
-    };
     handleSubmit(newProduct)
   };
 

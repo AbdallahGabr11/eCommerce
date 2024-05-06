@@ -4,7 +4,7 @@ import { FaPlus } from "react-icons/fa6";
 import { toast } from 'react-toastify';
 import { userContext } from '../App';
 
-const Admin = () => {
+const Admin = ({fetchUsers ,fetchProducts}) => {
   const [User, setUser] = useContext(userContext);
   const [users, setUsers] = useState([]);
   const [products, setProducts] = useState([]);
@@ -15,35 +15,11 @@ const Admin = () => {
     return navigate('/Login');
     }, []);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const apiUrl = '/api/users'; 
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        setUsers(data.users);
-      } catch (error) {
-        console.log('Error fetching users', error);
-      }
-    };
-
-    fetchUsers();
+  useEffect(async ()  => {
+    await setUsers(fetchUsers());
+    await setProducts(fetchProducts());
   }, []);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const apiUrl = '/api/user/products'; 
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        setProducts(data.products);
-      } catch (error) {
-        console.log('Error fetching products', error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
     const onDeleteProductClick = async (productId) => {
     const confirm = window.confirm(

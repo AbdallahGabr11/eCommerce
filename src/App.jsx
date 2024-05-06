@@ -77,9 +77,10 @@ const App = () => {
     //   return;
     // };
 
-    //new
+// Add New User
 
     const addUser = async (newUser) => {
+      try {
       const res = await fetch('/api/signup', {
         method: 'POST',
         headers: {
@@ -87,9 +88,61 @@ const App = () => {
         },
         body: JSON.stringify(newUser),
       });
+      return res;
+    } catch (error) {
+      console.log('Error fetching users', error);
       return;
+    }
     };
 
+    // Add New Product
+
+    const addProduct = async (newProduct) => {
+      try {
+        const res = await fetch('/api/admin/addProduct', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newProduct),
+        });
+        if (!res.ok) {
+          throw new Error('Failed to add product');
+        }
+        return await res.json();
+      } catch (error) {
+        throw new Error('Failed to add product');
+      }
+    };
+
+    // get all users
+    const fetchUsers = async () => {
+      const apiUrl = '/api/users'; 
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        return data.users;
+      } catch (error) {
+        console.log('Error fetching users', error);
+        return;
+      }
+    };
+
+    // get all products
+
+    const fetchProducts = async () => {
+      const apiUrl = '/api/user/products'; 
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        return data.products;
+      } catch (error) {
+        console.log('Error fetching products', error);
+        return;
+      }
+    };
+
+    
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -99,12 +152,12 @@ const App = () => {
         path='/Cart' 
         element={<Cart />} 
         />
-        <Route path='/Admin' element={<Admin />} />
+        <Route path='/Admin' element={<Admin fetchUsers={fetchUsers}  fetchProducts={fetchProducts}/>} />
         <Route path='/Logout' element={<Logout />} />
-        <Route path='/Signup' element={<Signup addUserSubmit={addUser} />} />
-        <Route path='/Add-User' element={<AddUser addUserSubmit={addUser} />} />
+        <Route path='/Signup' element={<Signup addUser={addUser} />} />
+        <Route path='/Add-User' element={<AddUser addUser={addUser} fetchUsers={fetchUsers}/>} />
         <Route path="/Products" element={<Products />} />
-        <Route path="/Add-Product" element={<AddProduct  />} />
+        <Route path="/Add-Product" element={<AddProduct addProduct={addProduct} fetchProducts={fetchProducts} />} />
         <Route 
         path='/Login' 
         element={<Login />} 

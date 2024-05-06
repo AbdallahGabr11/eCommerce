@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { userContext } from '../App';
 
-const AddUser = () => {
+const AddUser = ({addUser, fetchUsers}) => {
   const [user, setUser] = useContext(userContext);
   const isAdmin='user';
   const [password, setPassword] = useState('');
@@ -24,7 +24,7 @@ const AddUser = () => {
     return navigate('/Login');
     }, []);
 
-    const submitForm = (e) => {
+    const submitForm = async (e) => {
       e.preventDefault();
   
       const newUser = {
@@ -38,51 +38,26 @@ const AddUser = () => {
         cart:{
         },
       };
-      const submitUser = async (newUser) => {
+
         try {
-          const res = await fetch('/api/signup', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newUser),
-          });
-          if (!res.ok) {
-            throw new Error('Failed to add User');
-          }
-          return await res.json();
-        } catch (error) {
-          throw new Error('Failed to add User');
+          const res = await addUser(newUser);
+          if (res.ok) {
+            // If response status is within the 200-299 range, it means success
+            toast.success('User Added Successfully');
+            await setUsers(fetchUsers());
+            navigate('/Admin');
+        } else {
+            // If response status indicates an error, handle it here
+            const errorData = await res.json(); // Parse the response JSON
+            const errorMessage = errorData.error; // Extract the error message
+            setShowInvalidMessage(errorMessage);
+            // console.log(errorMessage);
         }
-      };
-      const handleSubmit = async (newUser) => {
-        try {
-          await submitUser(newUser);
-          toast.success('User Added Successfully');
-          const fetchUsers = async () => {
-            const apiUrl = '/api/users'; 
-            try {
-              const res = await fetch(apiUrl);
-              const data = await res.json();
-              setUsers(data.users);
-            } catch (error) {
-              console.log('Error fetching users', error);
-            }
-          };
-          // Fetch products again to include the newly added one
-          fetchUsers();
-          // Navigate to '/Admin'
-          navigate('/Admin');
-        } catch (error) {
-          console.error('Error adding user:', error);
-          toast.error('Failed to add user');
-          const errorMessage = error.message; // Extract the error message
-              setShowInvalidMessage(errorMessage);
-        }
-      };
-      
-      
-      handleSubmit(newUser)
+      }catch (error) {
+        // Handle network errors or other exceptions here
+        setShowInvalidMessage('Error fetching data: ' + error.message);
+     }
+          
     };
   
 
