@@ -1,46 +1,91 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link , useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { toast } from 'react-toastify';
 import { userContext } from '../App';
+
+
 
 
 const Login = () => {
     const [User, setUser] = useContext(userContext);
-    const [users, setUsers] = useState([]);
+    //const [users, setUsers] = useState([]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showInvalidMessage, setShowInvalidMessage] = useState(false); 
+    const [showInvalidMessage, setShowInvalidMessage] = useState(""); 
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-          const apiUrl = '/api/users'; 
-          try {
-            const res = await fetch(apiUrl);
-            const data = await res.json();
-            setUsers(data);
-          } catch (error) {
-            console.log('Error fetching data', error);
-          }
-        };
+    // useEffect(() => {
+    //     const fetchUsers = async () => {
+    //       const apiUrl = '/api/login'; 
+    //       try {
+    //         const res = await fetch(apiUrl);
+    //         const data = await res.json();
+    //         setUsers(data);
+    //       } catch (error) {
+    //         //console.log('Error fetching data', error);
+    //         setShowInvalidMessage(true);
+    //       }
+    //     };
     
-        fetchUsers();
-    }, []);
+    //     fetchUsers();
+    // }, []);
 
 
-    const submitForm = (e) => {
+    const submitForm = (e ) => {
         e.preventDefault();
+        const newUser = {
+            password,
+            email,
+            
+          };
+        // const user = users.find(u => u.email.toString() === email);
 
-        const user = users.find(u => u.email.toString() === email);
+        // if (user === undefined || user.password != password) {
+        //    // setShowInvalidMessage(true); // Show invalid message if user is undefined
+        // } else {  
+        // //   setIsLogged(true);
+        // setUser(user);
 
-        if (user === undefined || user.password != password) {
-            setShowInvalidMessage(true); // Show invalid message if user is undefined
-        } else {  
-        //   setIsLogged(true);
-        setUser(user);
-          navigate('/');
-        }
+
+        const fetchUsers = async () => {
+            const apiUrl = '/api/login'; 
+            try {
+                const res = await fetch(apiUrl , {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newUser),
+                });
+                
+                if (res.ok) {
+                    // If response status is within the 200-299 range, it means success
+                    const response = await res.json();
+                    setUser(response.data);
+                    toast.success('User Logged in Successfully');
+                    if(response.data.type=="user"){
+                        navigate('/');
+                    }else{
+                        navigate('/Admin');
+                    }
+                    
+                } 
+                else {
+                    // If response status indicates an error, handle it here
+                    const errorData = await res.json(); // Parse the response JSON
+                    const errorMessage = errorData.error; // Extract the error message
+                    setShowInvalidMessage(errorMessage);
+                }
+            } catch (error) {
+                // Handle network errors or other exceptions here
+                setShowInvalidMessage('Error fetching data: ' + error.message);
+            }
+        };
+        
+        fetchUsers();
+        
     };
 
     return (
@@ -89,9 +134,12 @@ const Login = () => {
                                 {showPassword ? ( <FaEye  />) : (<FaEyeSlash  />)}
                                 </button>
                             </div>
-                            {showInvalidMessage && ( // Conditionally render invalid message
-                                <p className="text-sm font-light text-red-800 font-semibold dark:text-red-800">
-                                    Invalid email or password
+                            {showInvalidMessage!="" && ( // Conditionally render invalid message
+                                <p className="text-sm font-light text-red-600 font-semibold dark:text-red-700">
+                                    {/* Invalid email or password */}
+                                    {showInvalidMessage}
+                                    {console.log(showInvalidMessage)}
+                                    
                                 </p>
                             )}
                             <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-700 dark:hover:bg-zinc-700 dark:focus:ring-primary-800">Sign in</button>

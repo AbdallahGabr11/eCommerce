@@ -11,7 +11,7 @@ const Admin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!User || User.isAdmin != true)
+    if(!User || User.type != 'admin')
     return navigate('/Login');
     }, []);
 
@@ -21,7 +21,7 @@ const Admin = () => {
       try {
         const res = await fetch(apiUrl);
         const data = await res.json();
-        setUsers(data);
+        setUsers(data.users);
       } catch (error) {
         console.log('Error fetching users', error);
       }
@@ -32,11 +32,11 @@ const Admin = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const apiUrl = '/api/products'; 
+      const apiUrl = '/api/user/products'; 
       try {
         const res = await fetch(apiUrl);
         const data = await res.json();
-        setProducts(data);
+        setProducts(data.products);
       } catch (error) {
         console.log('Error fetching products', error);
       }
@@ -123,12 +123,12 @@ const Admin = () => {
                       </h2>
                       <ul>
                         {products.map(product => (
-                          <li key={product.id} className="flex justify-between items-center mb-2">
-                                <Link to={`/Products/${product.id}`} className="text-blue-800 hover:underline">
-                                  <span>{product.name.length > 30 ? product.name.substring(0, 27) + '...' : product.name}</span>
+                          <li key={product.productId} className="flex justify-between items-center mb-2">
+                                <Link to={`/Products/${product.productId}`} className="text-blue-800 hover:underline">
+                                  <span>{product.productName.length > 30 ? product.productName.substring(0, 27) + '...' : product.productName}</span>
                                 </Link>
                             <div className="space-x-2">
-                            <Link to={`/Edit-Product/${product.id}`}>
+                            <Link to={`/Edit-Product/${product.productId}`}>
                               <button className="bg-blue-500 hover:bg-blue-600 font-bold text-white px-4 py-2 rounded-full focus:outline-none focus:shadow-outline mt-4">Edit</button>
                               </Link>
                               {/* <Link to={`/Delete-Product/${product.id}`}> */}
@@ -151,3 +151,4 @@ const Admin = () => {
 };
 
 export default Admin;
+

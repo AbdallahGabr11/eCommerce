@@ -4,10 +4,9 @@ import { toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { userContext } from '../App';
 
-
-const AddUser = ({ addUserSubmit }) => {
+const AddUser = () => {
   const [user, setUser] = useContext(userContext);
-  const isAdmin=false;
+  const isAdmin='user';
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [fName, setFName] = useState('');
@@ -15,34 +14,77 @@ const AddUser = ({ addUserSubmit }) => {
   const [telephone, setTelephone] = useState('');
   const [address, setAddress] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showInvalidMessage, setShowInvalidMessage] = useState(""); 
+  const [users, setUsers] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!user || user.isAdmin != true)
+    if(!user || user.type != 'admin')
     return navigate('/Login');
     }, []);
 
-  const submitForm = (e) => {
-    e.preventDefault();
-
-    const newUser = {
-      isAdmin,
-      password,
-      email,
-      fName,
-      lName,
-      telephone,
-      address,
-      cart:{
-      },
+    const submitForm = (e) => {
+      e.preventDefault();
+  
+      const newUser = {
+        type: isAdmin,
+        password,
+        email,
+        firstName : fName,
+        lastName :lName,
+        phoneNumber: telephone,
+        address,
+        cart:{
+        },
+      };
+      const submitUser = async (newUser) => {
+        try {
+          const res = await fetch('/api/signup', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newUser),
+          });
+          if (!res.ok) {
+            throw new Error('Failed to add User');
+          }
+          return await res.json();
+        } catch (error) {
+          throw new Error('Failed to add User');
+        }
+      };
+      const handleSubmit = async (newUser) => {
+        try {
+          await submitUser(newUser);
+          toast.success('User Added Successfully');
+          const fetchUsers = async () => {
+            const apiUrl = '/api/users'; 
+            try {
+              const res = await fetch(apiUrl);
+              const data = await res.json();
+              setUsers(data.users);
+            } catch (error) {
+              console.log('Error fetching users', error);
+            }
+          };
+          // Fetch products again to include the newly added one
+          fetchUsers();
+          // Navigate to '/Admin'
+          navigate('/Admin');
+        } catch (error) {
+          console.error('Error adding user:', error);
+          toast.error('Failed to add user');
+          const errorMessage = error.message; // Extract the error message
+              setShowInvalidMessage(errorMessage);
+        }
+      };
+      
+      
+      handleSubmit(newUser)
     };
-
-    addUserSubmit(newUser);
-    toast.success('User Registered Successfully');
-
-    return navigate('/Admin');
-  };
+  
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
@@ -139,6 +181,13 @@ const AddUser = ({ addUserSubmit }) => {
                 onChange={(e) => setAddress(e.target.value)}
                 />
               </div>
+              {showInvalidMessage!="" && ( // Conditionally render invalid message
+                                <p className="text-sm font-light text-red-600 font-semibold dark:text-red-700">
+                                    {/* Invalid email or password */}
+                                    {showInvalidMessage}
+                                    
+                                </p>
+                            )}
               <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-700 dark:hover:bg-zinc-700 dark:focus:ring-primary-800">Create an account</button>
             </form>
           </div>

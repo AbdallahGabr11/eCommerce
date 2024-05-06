@@ -30,16 +30,16 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   // Add New Product
-  const addProduct = async (newProduct) => {
-    const res = await fetch('/api/products', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newProduct),
-    });
-    return;
-  };
+  // const addProduct = async (newProduct) => {
+  //   const res = await fetch('/api/products', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(newProduct),
+  //   });
+  //   return;
+  // };
 
   // Update User
   const editUser = async (user) => {
@@ -66,8 +66,21 @@ const App = () => {
     };
 
     // Add New User
+    // const addUser = async (newUser) => {
+    //   const res = await fetch('/api/users', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(newUser),
+    //   });
+    //   return;
+    // };
+
+    //new
+
     const addUser = async (newUser) => {
-      const res = await fetch('/api/users', {
+      const res = await fetch('/api/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +104,7 @@ const App = () => {
         <Route path='/Signup' element={<Signup addUserSubmit={addUser} />} />
         <Route path='/Add-User' element={<AddUser addUserSubmit={addUser} />} />
         <Route path="/Products" element={<Products />} />
-        <Route path="/Add-Product" element={<AddProduct addProductSubmit={addProduct} />} />
+        <Route path="/Add-Product" element={<AddProduct  />} />
         <Route 
         path='/Login' 
         element={<Login />} 

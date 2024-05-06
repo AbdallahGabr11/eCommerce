@@ -5,9 +5,9 @@ import { toast } from 'react-toastify';
 import { userContext } from '../App';
 
 
-const Signup = ({ addUserSubmit }) => {
+const Signup = () => {
   const [user, setUser] = useContext(userContext);
-  const isAdmin=false;
+  const isAdmin='user';
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [fName, setFName] = useState('');
@@ -15,7 +15,7 @@ const Signup = ({ addUserSubmit }) => {
   const [telephone, setTelephone] = useState('');
   const [address, setAddress] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
+  const [showInvalidMessage, setShowInvalidMessage] = useState(""); 
 
   const navigate = useNavigate();
 
@@ -23,22 +23,51 @@ const Signup = ({ addUserSubmit }) => {
     e.preventDefault();
 
     const newUser = {
-      isAdmin,
+      type: isAdmin,
       password,
       email,
-      fName,
-      lName,
-      telephone,
+      firstName : fName,
+      lastName :lName,
+      phoneNumber: telephone,
       address,
       cart:{
       },
     };
 
-    addUserSubmit(newUser);
-    setUser(newUser);
-    toast.success('User Registered Successfully');
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch('/api/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newUser),
+        });
+          
+          if (res.ok) {
+              // If response status is within the 200-299 range, it means success
+              const data = await res.json();
+              toast.success('User Registered Successfully');
 
-    return navigate('/');
+              navigate('/');
+          } else {
+              // If response status indicates an error, handle it here
+              const errorData = await res.json(); // Parse the response JSON
+              const errorMessage = errorData.error; // Extract the error message
+              setShowInvalidMessage(errorMessage);
+              console.log(errorMessage);
+
+          }
+      } catch (error) {
+          // Handle network errors or other exceptions here
+          setShowInvalidMessage('Error fetching data: ' + error.message);
+      }
+  };
+  
+    fetchUsers();
+    //setUser(newUser);
+
+    return ;
   };
 
   return (
@@ -136,7 +165,15 @@ const Signup = ({ addUserSubmit }) => {
                 onChange={(e) => setAddress(e.target.value)}
                 />
               </div>
-              <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-700 dark:hover:bg-zinc-700 dark:focus:ring-primary-800">Create an account</button>
+              {showInvalidMessage!="" && ( // Conditionally render invalid message
+                                <p className="text-sm font-light text-red-600 font-semibold dark:text-red-700">
+                                    {/* Invalid email or password */}
+                                    {showInvalidMessage}
+                                    {console.log(showInvalidMessage)}
+                                    
+                                </p>
+                            )}
+              <button type="submit" className="w-full text-white bg-black hover:bg-black focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-700 dark:hover:bg-zinc-700 dark:focus:ring-primary-800">Create an account</button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account? <Link to="/Login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</Link>
               </p>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { userContext } from '../App';
 
-const AddProduct = ({ addProductSubmit }) => {
+const AddProduct = () => {
   const [user, setUser] = useContext(userContext);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -15,10 +15,10 @@ const AddProduct = ({ addProductSubmit }) => {
   const [supplierName, setSupplierName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
-
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
-    if(!user || user.isAdmin != true)
+    if(!user || user.type != 'admin')
     return navigate('/Login');
     }, []);
 
@@ -26,25 +26,61 @@ const AddProduct = ({ addProductSubmit }) => {
     e.preventDefault();
 
     const newProduct = {
-      name,
-      description,
-      image,
+      productName:name,
+      productImageUrl:image,
       price,
       quantity,
       brand,
-      supplier: {
-        name: supplierName,
-        description: supplierInformation,
-        contactEmail,
-        contactPhone,
-      },
+      
+      supplierName,
+       supplierInformation,
+       description,
+      contactEmail,
+      contactPhone,
+      
     };
-
-    addProductSubmit(newProduct);
-
-    toast.success('Product Added Successfully');
-
-    return navigate('/Admin');
+    const handleSubmit = async (newProduct) => {
+      try {
+        await submitProduct(newProduct);
+        toast.success('Product Added Successfully');
+        const fetchProducts = async () => {
+          const apiUrl = '/api/user/products'; 
+          try {
+            const res = await fetch(apiUrl);
+            const data = await res.json();
+            setProducts(data.products);
+          } catch (error) {
+            console.log('Error fetching products', error);
+          }
+        };
+        // Fetch products again to include the newly added one
+        fetchProducts();
+        // Navigate to '/Admin'
+        navigate('/Admin');
+      } catch (error) {
+        console.error('Error adding product:', error);
+        toast.error('Failed to add product');
+      }
+    };
+    
+    const submitProduct = async (newProduct) => {
+      try {
+        const res = await fetch('/api/admin/addProduct', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newProduct),
+        });
+        if (!res.ok) {
+          throw new Error('Failed to add product');
+        }
+        return await res.json();
+      } catch (error) {
+        throw new Error('Failed to add product');
+      }
+    };
+    handleSubmit(newProduct)
   };
 
   return (

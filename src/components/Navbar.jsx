@@ -44,7 +44,7 @@ const Navbar = () => {
                 ) : (
                   ''
                 )}
-                {(user != null && user.isAdmin) ? (
+                {(user != null && user.type == "admin") ? (
                   <NavLink to='/Admin' className={linkClass}>
                     Admin Panel
                   </NavLink>
