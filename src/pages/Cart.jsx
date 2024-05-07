@@ -10,11 +10,18 @@ const Cart = () => {
   const [showCheckout, setShowCheckout] = useState(false);
   const [totalPrice, setTotalPrice] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const [creditCardInfo, setCreditCardInfo] = useState({
     cardNumber: '',
     expiryDate: '',
     cvv: '',
   });
+
+  const [cardNumber, setCardNumber] = useState();
+  const [expiryDate, setExpiryDate] = useState();
+  const [cvv, setCvv] = useState();
+
   const [cart, setCart] = useState([]);
 
   const fetchProduct=async (id)=>{
@@ -40,20 +47,6 @@ const Cart = () => {
   } 
   }
 
-  // const priceOf = async (id) => {
-  //   try {
-  //     const res = await fetch(`/api/products/${id}`);
-  //     if (res.ok) {
-  //       const data = await res.json();
-  //       return { ...data, id: parseInt(id) };
-  //     } else {
-  //       throw new Error('Failed to fetch product');
-  //     }
-  //   } catch (error) {
-  //     console.log('Error fetching data', error);
-  //     return null;
-  //   }
-  // };
 
   useEffect(() => {
     if (!User) {
@@ -69,6 +62,7 @@ const Cart = () => {
         }
         const data = await res.json();
         const cartItems = data.cartItems;
+        setTotalPrice(data.cart.totalPrice);
   
         // Fetch product details for each cart item concurrently
         const productPromises = cartItems.map((cartItem) => fetchProduct(cartItem.productId));
@@ -107,7 +101,7 @@ const Cart = () => {
     }));
   };
 
-  const handleRemoveFromCart = async (id) => {
+  const handleRemoveFromCart = async (id,index) => {
     if (!User) {
       return navigate('/Login');
     }
@@ -116,43 +110,35 @@ const Cart = () => {
 
     if (!confirm) return;
 
-    // const newCart = { ...User.cart };
+    delete cart.cartItems[index];
 
-    // if (!(id in newCart)) {
-    //   return navigate('/Cart');
-    // }
+    const res = await fetch(`/deleteItem/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(product),
+    });
 
-    // delete newCart[id];
-
-    // const updateCart = {
-    //   cart: newCart,
-    // };
-
-    // const res = await fetch(`/api/users/${User.id}`, {
-    //   method: 'PATCH',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(updateCart),
-    // });
-
-    // if (res.ok) {
-    //   const updatedUser = { ...User, cart: newCart };
-    //   setUser(updatedUser);
-
-    //   toast.success('Product removed from the cart successfully');
-    // } else {
-    //   toast.error('Failed to remove product from the cart');
-    // }
-    // return navigate('/Cart');
+    if (res.ok) {
+        toast.success('Product removed from the cart successfully');
+        
+      } else {
+        toast.error('Failed to remove product from the cart');
+      }
+      setTimeout(()=>{
+        return navigate('/Cart');
+      },100);
   };
 
-  const handleQuantityChange = (e, productId) => {
-    // const newQuantity = parseInt(e.target.value);
-    // if (newQuantity < 1) {
-    //   return;
-    // }
-
+  const handleQuantityChange = (e, price ,index) => {
+    const newQuantity = parseInt(e.target.value);
+    if (newQuantity < 1) {
+      return;
+    }
+      q=newQuantity-cart.cartItems[index].quantity;
+      setTotalPrice(totalPrice+q*price);
+      cart.cartItems[index].quantity=newQuantity;
     // const updatedCart = { ...User.cart, [productId]: newQuantity.toString() };
     // const updatedUser = { ...User, cart: updatedCart };
     // setUser(updatedUser);
@@ -169,29 +155,35 @@ const Cart = () => {
 
     if (!confirm) return;
 
-    // const newCart = {};
+    const checkoutCart = {
+      cardNumber:creditCardInfo.cardNumber,
+      expiryDate:creditCardInfo.expiryDate,
+      cvv:creditCardInfo.cvv,
+    };
 
-    // const updateCart = {
-    //   cart: newCart,
-    // };
-
-    // const res = await fetch(`/api/users/${User.id}`, {
-    //   method: 'PATCH',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(updateCart),
-    // });
-
-    // if (res.ok) {
-    //   const updatedUser = { ...User, cart: newCart };
-    //   setUser(updatedUser);
-
-    //   toast.success('Your order has been placed successfully. Thank you for your purchase!');
-    // } else {
-    //   toast.error('Failed to place the order. Please try again later.');
-    // }
-    // return navigate('/');
+    try {
+      const res = await fetch('/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(checkoutCart),
+      });
+      if (res.ok) {
+        toast.success('Successful Checkout');
+        navigate('/');
+    } else {
+        // If response status indicates an error, handle it here
+        const errorData = await res.json(); // Parse the response JSON
+        const errorMessage = errorData.error; // Extract the error message
+        setShowInvalidMessage(errorMessage);
+        console.log(errorMessage);
+    }
+      return navigate('/');
+    } catch (error) {
+      console.log('Error fetching Checkout', error);
+      return;
+    }
   };
 
   const checkoutTransitionStyles = {
@@ -199,9 +191,9 @@ const Cart = () => {
     transform: 'translateX(0)',
   };
 
-  const updateCartInServer = async (updatedCart) => {
-    // Implement logic to update cart in the server
-  };
+  // const updateCartInServer = async (updatedCart) => {
+  //   // Implement logic to update cart in the server
+  // };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -235,13 +227,13 @@ const Cart = () => {
                               <input
                                 type="number"
                                 value={item.product.quantity}
-                                onChange={(e) => handleQuantityChange(e, item.product.productId)}
+                                onChange={(e) => handleQuantityChange(e, item.product.price, index)}
                                 min="1"
                                 className="border border-gray-300 rounded-md px-2 py-1 ml-4 w-16"
                               />
                               <button
                                 className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 ml-4"
-                                onClick={() => handleRemoveFromCart(item.product.productId)}
+                                onClick={() => handleRemoveFromCart(item.product.productId, index)}
                               >
                                 Remove
                               </button>
@@ -327,6 +319,14 @@ const Cart = () => {
           />
         </div>
       )}
+                    {showInvalidMessage!="" && ( // Conditionally render invalid message
+                                <p className="text-sm font-light text-red-600 font-semibold dark:text-red-700">
+                                    {/* Invalid email or password */}
+                                    {showInvalidMessage}
+                                    {console.log(showInvalidMessage)}
+                                    
+                                </p>
+                            )}
       {/* Checkout button */}
       <button disabled={!paymentMethod} onClick={handleCompletedCheckout} className={`bg-zinc-800 hover:bg-zinc-900 text-white px-4 py-2 mt-4 font-medium rounded-lg ${!paymentMethod ? 'opacity-50 cursor-not-allowed' : ''}`}>
         Checkout
