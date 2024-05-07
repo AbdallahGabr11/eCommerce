@@ -3,25 +3,25 @@ import { useParams, useLoaderData, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { userContext } from '../App';
 
-const EditProduct = ({ updateProductSubmit }) => {
+const EditProduct = ({ updateProductSubmit,fetchProducts }) => {
   const product = useLoaderData();
-  const [name, setName] = useState(product.name);
+  const [name, setName] = useState(product.productName);
   const [price, setPrice] = useState(product.price);
-  const [image, setImage] = useState(product.image);
+  const [image, setImage] = useState(product.productImageUrl);
   const [quantity, setQuantity] = useState(product.quantity);
   const [description, setDescription] = useState(product.description);
   const [brand, setBrand] = useState(product.brand);
-  const [supplierInformation, setSupplierInformation] = useState(product.supplier.description);
-  const [supplierName, setSupplierName] = useState(product.supplier.name);
-  const [contactEmail, setContactEmail] = useState(product.supplier.contactEmail);
-  const [contactPhone, setContactPhone] = useState(product.supplier.contactPhone);
-
+  const [supplierInformation, setSupplierInformation] = useState(product.supplierInformation);
+  const [supplierName, setSupplierName] = useState(product.supplierName);
+  const [contactEmail, setContactEmail] = useState(product.contactEmail);
+  const [contactPhone, setContactPhone] = useState(product.contactPhone);
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
   const [user, setUser] = useContext(userContext);
 
   useEffect(() => {
-  if(!user || user.isAdmin != true)
+  if(!user || user.type != 'admin')
   return navigate('/Login');
   }, []);
 
@@ -30,26 +30,28 @@ const EditProduct = ({ updateProductSubmit }) => {
     e.preventDefault();
 
     const updateProduct = {
-      id,
-      name,
+      productId:id,
+      productName:name,
       description,
-      image,
+      productImageUrl:image,
       price,
       quantity,
       brand,
-      supplier: {
-        name: supplierName,
-        description: supplierInformation,
+     
+         supplierName,
+        supplierInformation,
         contactEmail,
         contactPhone,
-      },
+      
     };
 
     updateProductSubmit(updateProduct);
-
     toast.success('Product Updated Successfully');
+    setProducts(fetchProducts());
 
-    return navigate('/Admin');
+    setTimeout(()=>{
+      return navigate('/Admin');
+    },50)
   };
 
   return (

@@ -57,21 +57,21 @@ const Signup = ({addUser}) => {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
+    <section className="bg-gray-50 bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full bg-white rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-white">
               Create your account
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={submitForm}>
             <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 text-white">Your email</label>
                 <input 
                  type="email" 
                  name="email" 
                  id="email" 
-                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" 
                  placeholder="name@company.com" 
                  required
                  value={email}
@@ -83,7 +83,7 @@ const Signup = ({addUser}) => {
                   type={showPassword ? 'text' : 'password'} 
                   name="password" 
                   id="password" 
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" 
                   placeholder="Your Password" 
                   required
                   value={password}
@@ -99,12 +99,12 @@ const Signup = ({addUser}) => {
                </div>
               <div className="flex space-x-4">
                 <div className="flex-1">
-                  <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
+                  <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-gray-900 text-white">First Name</label>
                   <input 
                   type="text" 
                   name="firstName" 
                   id="firstName" 
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" 
                   placeholder="First Name" 
                   required 
                   value={fName}
@@ -112,12 +112,12 @@ const Signup = ({addUser}) => {
                   />
                 </div>
                 <div className="flex-1">
-                  <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
+                  <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-gray-900 text-white">Last Name</label>
                   <input 
                   type="text" 
                   name="lastName" 
                   id="lastName" 
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" 
                   placeholder="Last Name" 
                   required
                   value={lName}
@@ -126,12 +126,12 @@ const Signup = ({addUser}) => {
                 </div>
               </div>
               <div>
-                <label htmlFor="telephone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Telephone</label>
+                <label htmlFor="telephone" className="block mb-2 text-sm font-medium text-gray-900 text-white">Telephone</label>
                 <input 
                 type="tel" 
                 name="telephone" 
                 id="telephone" 
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" 
                 placeholder="Telephone" 
                 required 
                 value={telephone}
@@ -139,12 +139,12 @@ const Signup = ({addUser}) => {
                 />
               </div>
               <div>
-                <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-900 text-white">Address</label>
                 <input 
                 type="text" 
                 name="address" 
                 id="address" 
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" 
                 placeholder="City, Country, Street, Building No" 
                 required 
                 value={address}
@@ -152,7 +152,7 @@ const Signup = ({addUser}) => {
                 />
               </div>
               {showInvalidMessage!="" && ( // Conditionally render invalid message
-                                <p className="text-sm font-light text-red-600 font-semibold dark:text-red-700">
+                                <p className="text-sm font-light text-red-600 font-semibold text-red-700">
                                     {/* Invalid email or password */}
                                     {showInvalidMessage}
                                     {console.log(showInvalidMessage)}
@@ -160,8 +160,13 @@ const Signup = ({addUser}) => {
                                 </p>
                             )}
               <button type="submit" className="w-full text-white bg-blue-700 hover:hover:bg-zinc-700 focus:ring-4 focus:outline-none focus:ring-primary-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Create an account</button>
+<<<<<<< Updated upstream
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account? <Link to="/Login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</Link>
+=======
+              <p className="text-sm font-light text-gray-500 text-gray-400">
+                Already have an account? <Link to="/Login" className="font-medium text-primary-600 hover:underline text-primary-500">Login here</Link>
+>>>>>>> Stashed changes
               </p>
             </form>
           </div>

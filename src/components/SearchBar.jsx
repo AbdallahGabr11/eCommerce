@@ -6,7 +6,7 @@ export const SearchBar = ({ setResults, products }) => {
 
   const fetchData = (value) => {
     const results = products.filter((product) =>
-      product.name.toLowerCase().includes(value.toLowerCase())
+      product.productName.toLowerCase().includes(value.toLowerCase())
     );
     setResults(results);
   };

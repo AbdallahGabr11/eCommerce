@@ -9,16 +9,24 @@ const DeleteUser = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        if(!user || user.isAdmin != true)
+        if(!user || user.type != 'admin')
         return navigate('/Login');
 
         const onDeleteUserClick = async () => {    
-            const res = await fetch(`/api/users/${id}`, {
-                method: 'DELETE',
-              }); 
-
+          const res = await fetch('/api/admin/deleteUser', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId:id })
+          });
+          
+          if (!res.ok) {
+            throw new Error('Failed to delete user');
+          }
                 navigate('/Admin');
             };
+            
             onDeleteUserClick();
 
         }, []);

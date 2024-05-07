@@ -9,11 +9,12 @@ const ProductListings = ({ isHome = false }) => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const apiUrl = isHome ? '/api/products?_limit=4' : '/api/products';
+      const apiUrl =  '/api/user/products';
       try {
         const res = await fetch(apiUrl);
         const data = await res.json();
-        setProducts(data);
+        const limitedProducts = isHome ? data.products.slice(0, 4) : data.products;
+        setProducts(limitedProducts);
       } catch (error) {
         console.log('Error fetching data', error);
       } finally {
@@ -46,14 +47,14 @@ const ProductListings = ({ isHome = false }) => {
             {searched ? ( // If searched
             searchResults.map((result) => (
               <ProductListing
-              key={result.id}
+              key={result.productId}
               product={result}
               />
             ))
           ) : (
             Products.map((product) => (
               <ProductListing
-              key={product.id}
+              key={product.productId}
               product={product}
               />
             ))

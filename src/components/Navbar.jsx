@@ -8,13 +8,30 @@ const Navbar = () => {
   const [user, setUser] = useContext(userContext);
   const [itemCount, setItemCount] = useState(0);
 
-  useEffect(() => {
-    if (user && user.cart) {
-      const totalItems = Object.values(user.cart).reduce((acc, curr) => acc + parseInt(curr), 0);
-      setItemCount(totalItems);
-    } else {
-      setItemCount(0);
-    }
+  useEffect( () => {
+
+
+    const fetchCart = async () => {
+      const apiUrl = '/api/getCart'; 
+      try {
+        if(user){
+          const res = await fetch(apiUrl);
+        const data = await res.json();
+        
+        setItemCount(data.itemCount);
+        
+
+        }else{
+          setItemCount(0);
+        }
+        
+      } catch (error) {
+        console.log('Error fetching Cart', error);
+      }
+    };
+
+    fetchCart();
+    
   }, [user]);
 
 

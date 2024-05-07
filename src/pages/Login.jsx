@@ -55,26 +55,26 @@ const Login = () => {
     };
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-900">
+        <section className="bg-gray-50 bg-gray-900">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                <h1 className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                <h1 className="flex items-center mb-6 text-2xl font-semibold text-gray-900 text-white">
                     Welcome back    
                 </h1>
-                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div className="w-full bg-white rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-1xl dark:text-white">
+                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-1xl text-white">
                             Sign in to your account
                         </h1>
                         <form className="space-y-4 md:space-y-6" onSubmit={submitForm}>
                             <div>
-                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 text-white">
                                     Your email
                                 </label>
                                 <input 
                                     type="email" 
                                     name="email" 
                                     id="email" 
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" 
                                     placeholder="name@company.com" 
                                     required
                                     value={email}
@@ -86,7 +86,7 @@ const Login = () => {
                                 type={showPassword ? 'text' : 'password'} 
                                 name="password" 
                                 id="password" 
-                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" 
                                 placeholder="Your Password" 
                                 required
                                 value={password}
@@ -101,7 +101,7 @@ const Login = () => {
                                 </button>
                             </div>
                             {showInvalidMessage!="" && ( // Conditionally render invalid message
-                                <p className="text-sm font-light text-red-600 font-semibold dark:text-red-700">
+                                <p className="text-sm font-light text-red-600 font-semibold text-red-700">
                                     {/* Invalid email or password */}
                                     {showInvalidMessage}
                                     {console.log(showInvalidMessage)}
@@ -109,8 +109,13 @@ const Login = () => {
                                 </p>
                             )}
                             <button type="submit" className="w-full text-white bg-blue-700 hover:hover:bg-zinc-700 focus:ring-4 focus:outline-none focus:ring-primary-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
+<<<<<<< Updated upstream
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Don’t have an account yet? <Link to="/Signup" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
+=======
+                            <p className="text-sm font-light text-gray-500 text-gray-400">
+                                Don’t have an account yet? <Link to="/Signup" className="font-medium text-primary-600 hover:underline text-primary-500">Sign up</Link>
+>>>>>>> Stashed changes
                             </p>
                         </form>
                     </div>

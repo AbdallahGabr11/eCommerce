@@ -43,7 +43,7 @@ const App = () => {
 
   // Update User
   const editUser = async (user) => {
-    const res = await fetch(`/api/users/${user.id}`, {
+    const res = await fetch(`/api/admin/editUser`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ const App = () => {
 
     // Update Product
     const updateProduct = async (product) => {
-      const res = await fetch(`/api/products/${product.id}`, {
+      const res = await fetch(`/api/admin/editProduct`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -142,7 +142,28 @@ const App = () => {
       }
     };
 
+<<<<<<< Updated upstream
     
+=======
+    const fetchCart = async () => {
+      const apiUrl = '/api/getCart'; 
+      try {
+        if(user){
+          const res = await fetch(apiUrl);
+        const data = await res.json();
+        
+        setItemCount(data.itemCount);
+        
+
+        }else{
+          setItemCount(0);
+        }
+        
+      } catch (error) {
+        console.log('Error fetching Cart', error);
+      }
+    };
+>>>>>>> Stashed changes
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -164,22 +185,24 @@ const App = () => {
         />
         <Route 
         path='/Profile/:id' 
-        element={<Profile editUserSubmit={editUser} />}
+        element={<Profile  editUserSubmit={editUser} />} 
         loader={userLoader}  
         />
         <Route 
         path='/Edit-User/:id' 
-        element={<EditUser editUserSubmit={editUser} />}
+        element={<EditUser fetchUsers={fetchUsers} editUserSubmit={editUser} />}
         loader={userLoader}  
         />
+
         <Route 
         path="/Edit-Product/:id" 
-        element={<EditProduct updateProductSubmit={updateProduct} />}
+        
+        element={<EditProduct updateProductSubmit={updateProduct} fetchProducts={fetchProducts} />}
         loader={productLoader} 
         />
         <Route 
         path='/Products/:id'
-        element={<ProductPage />}
+        element={<ProductPage fetchCart={fetchCart}/>}
         loader={productLoader}
         />
         <Route 
@@ -192,6 +215,7 @@ const App = () => {
         />
         <Route path='*' element={<NotFoundPage />} />
       </Route>
+
     )
   );
 

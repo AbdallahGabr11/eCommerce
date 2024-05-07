@@ -9,14 +9,21 @@ const DeleteProduct = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        if(!user || user.isAdmin != true)
+        if(!user || user.type != "admin")
         return navigate('/Login');
 
         const onDeleteProductClick = async () => {    
-            const res = await fetch(`/api/products/${id}`, {
-                method: 'DELETE',
-              }); 
-              
+          const res = await fetch('/api/admin/deleteProduct', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId:id })
+          });
+          
+          if (!res.ok) {
+            throw new Error('Failed to delete product');
+          }
                 navigate('/Admin');
             };
             

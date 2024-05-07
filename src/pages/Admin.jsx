@@ -75,16 +75,16 @@ const Admin = ({fetchUsers ,fetchProducts}) => {
                       </h2>
                       <ul>
                         {users.map(user => (
-                          <li key={user.id} className="flex justify-between items-center mb-2">
-                            <Link to={`/Edit-User/${user.id}`} className="text-blue-800 hover:underline">
+                          <li key={user.userId} className="flex justify-between items-center mb-2">
+                            <Link to={`/Edit-User/${user.userId}`} className="text-blue-800 hover:underline">
                               <span>{user.email.length > 30 ? user.email.substring(0, 27) + '...' : user.email}</span>
                               </Link>
                             <div className="space-x-2">
-                            <Link to={`/Edit-User/${user.id}`}>
+                            <Link to={`/Edit-User/${user.userId}`}>
                               <button className="bg-blue-500 hover:bg-blue-600 font-bold text-white px-4 py-2 rounded-full focus:outline-none focus:shadow-outline mt-4">Edit</button>
                               </Link>
                               {/* <Link to={`/Delete-User/${user.id}`}> */}
-                                <button className="bg-red-500 hover:bg-red-600 font-bold text-white px-4 py-2 rounded-full focus:outline-none focus:shadow-outline mt-4" onClick={() => onDeleteUserClick(user.id)}>Delete</button>
+                                <button className="bg-red-500 hover:bg-red-600 font-bold text-white px-4 py-2 rounded-full focus:outline-none focus:shadow-outline mt-4" onClick={() => onDeleteUserClick(user.userId)}>Delete</button>
                               {/* </Link> */}
                             </div>
                           </li>
@@ -112,7 +112,7 @@ const Admin = ({fetchUsers ,fetchProducts}) => {
                               <button className="bg-blue-500 hover:bg-blue-600 font-bold text-white px-4 py-2 rounded-full focus:outline-none focus:shadow-outline mt-4">Edit</button>
                               </Link>
                               {/* <Link to={`/Delete-Product/${product.id}`}> */}
-                              <button className="bg-red-500 hover:bg-red-600 font-bold text-white px-4 py-2 rounded-full focus:outline-none focus:shadow-outline mt-4" onClick={() => onDeleteProductClick(product.id)}>Delete</button>
+                              <button className="bg-red-500 hover:bg-red-600 font-bold text-white px-4 py-2 rounded-full focus:outline-none focus:shadow-outline mt-4" onClick={() => onDeleteProductClick(product.productId)}>Delete</button>
                               {/* </Link> */}
                             </div>
                           </li>
@@ -131,4 +131,3 @@ const Admin = ({fetchUsers ,fetchProducts}) => {
 };
 
 export default Admin;
-
