@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { userContext } from '../App';
+import { userContext,itemCountContext } from '../App';
 
 const ProductListing = ({ product }) => {
   const [User, setUser] = useContext(userContext);
+  const [itemCount, setItemCount] = useContext(itemCountContext);
   const navigate = useNavigate();
 
 
@@ -43,13 +44,14 @@ const ProductListing = ({ product }) => {
     },
     body: JSON.stringify(updateCart),
   });
-    
+    setItemCount(itemCount+existingQuantity);
     // const updatedUser = { ...User, cart: newCart };
     // setUser(updatedUser);
 
     toast.success('Product added to the cart successfully');
-
-    return ;
+  setTimeOut(()=>{
+        return ;
+  },100)
   };
 
     
