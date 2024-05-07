@@ -10,9 +10,13 @@ const Admin = ({fetchUsers ,fetchProducts}) => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(!User || User.type != 'admin')
-    return navigate('/Login');
+  useEffect(async () => {
+    try {
+      const res = await fetch('/api/admin');
+      return;
+    } catch (error) {
+      return navigate('/Login');
+    }    
     }, []);
 
   useEffect(async ()  => {
