@@ -59,6 +59,7 @@ const Cart = () => {
     if (!User) {
       return navigate('/Login');
     }
+
   
     const fetchCartItems = async () => {
       try {
@@ -75,10 +76,10 @@ const Cart = () => {
         const products = await Promise.all(productPromises);
   
         // Combine cart items with product details
-        const itemsWithProducts = cartItems.map((cartItem, index) => ({
-          ...cartItem,
-          product: products[index], // Assuming the order matches
-        }));
+        // const itemsWithProducts = cartItems.map((cartItem, index) => ({
+        //   ...cartItem,
+        //   product: products[index], // Assuming the order matches
+        // }));
   
         setCart(itemsWithProducts);
       } catch (error) {
@@ -209,7 +210,7 @@ const Cart = () => {
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 bg-white border-b border-gray-200">
               <h1 className="text-4xl font-semibold mb-4">Shopping Cart</h1>
-              {cart.cartItems.length === 0 ? (
+              {cart.length === 0 ? (
                 <p>Your cart is empty.</p>
               ) : (
                 <>
