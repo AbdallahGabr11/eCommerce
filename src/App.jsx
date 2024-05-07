@@ -24,10 +24,11 @@ import DeleteUser from './pages/DeleteUser';
 import Profile, {userLoader} from './pages/Profile';
 
 export const userContext=React.createContext(); // make loggedContext and userContext then wrap one above another
-
+export const cartItemCount=React.createContext(); 
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [itemCount, setItemCount] = useState(0);
 
   // Add New Product
   // const addProduct = async (newProduct) => {
@@ -215,6 +216,6 @@ const App = () => {
     )
   );
 
-  return (<userContext.Provider value={[user, setUser]} > <RouterProvider router={router} /></userContext.Provider>);
+  return (<userContext.Provider value={[user, setUser]} > <cartItemCount.Provider value={[itemCount, setItemCount]} ><RouterProvider router={router} /> </cartItemCount.Provider></userContext.Provider>);
 };
 export default App;
