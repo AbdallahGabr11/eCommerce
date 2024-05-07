@@ -49,9 +49,9 @@ const ProductListing = ({ product }) => {
     // setUser(updatedUser);
 
     toast.success('Product added to the cart successfully');
-  setTimeOut(()=>{
-        return ;
-  },100)
+   setTimeout(()=>{
+      return ;
+    },100)
   };
 
     
