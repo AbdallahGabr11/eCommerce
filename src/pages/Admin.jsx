@@ -10,20 +10,40 @@ const Admin = ({fetchUsers ,fetchProducts}) => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(async () => {
-    try {
-      const res = await fetch('/api/admin');
-      return;
-    } catch (error) {
-      return navigate('/Login');
-    }    
+   useEffect(() => {
+    if(!User || User.type != 'admin')
+    return navigate('/Login');
     }, []);
 
-  useEffect(async ()  => {
-    await setUsers(fetchUsers());
-    await setProducts(fetchProducts());
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const apiUrl = '/api/users'; 
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        setUsers(data.users);
+      } catch (error) {
+        console.log('Error fetching users', error);
+      }
+    };
+
+    fetchUsers();
   }, []);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const apiUrl = '/api/user/products'; 
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        setProducts(data.products);
+      } catch (error) {
+        console.log('Error fetching products', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
     const onDeleteProductClick = async (productId) => {
     const confirm = window.confirm(
