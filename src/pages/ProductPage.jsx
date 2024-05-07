@@ -3,12 +3,13 @@ import { useLoaderData, useNavigate ,useParams} from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { userContext } from '../App';
+import { userContext,itemCountContext } from '../App';
 
 
 const ProductPage = ({fetchCart}) => {
 
   const [User, setUser] = useContext(userContext);
+  const [itemCount, setItemCount] = useContext(itemCountContext);
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -46,12 +47,12 @@ const ProductPage = ({fetchCart}) => {
     // Update the user context with the new user data
     // const updatedUser = { ...User, cart: newCart };
     // setUser(updatedUser);
-
+    setItemCount(itemCount + existingQuantity);
     toast.success('Product added to the cart successfully');
-    fetchCart();
+    // fetchCart();
     setTimeout(()=>{
       return navigate('/Products');
-    },50)
+    },100)
     
   }
 
