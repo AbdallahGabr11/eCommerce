@@ -1,0 +1,45 @@
+{cart.map((cartItem, index) => (
+  <div key={index} className="border-b border-gray-200 mb-4 pb-4 ">
+    <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-white dark:border-zinc-300 w-500 " style={{ width: '600px' }}>
+      <div className="flex items-center justify-between">
+        {/*
+          Call fetchProduct to get product details for each cart item
+          and render the item once the details are fetched.
+        */}
+        {fetchProduct(cartItem.productId).then(item => (
+          <React.Fragment>
+            <img
+              className="p-4"
+              src={item.image}
+              alt="product image"
+              style={{ width: '110px', height: '110px' }}
+            />
+            <div className="px-5">
+              <Link to={`/Products/${item.id}`} className="text-blue-900 hover:underline">
+                <h5 className="text-xl font-semibold tracking-tight px-6 py-2">
+                  {item.name.length > 20 ? item.name.substring(0, 18) + '...' : item.name}
+                </h5>
+              </Link>
+              <div className="flex items-center justify-start">
+                <span className="text-2xl font-bold text-gray-900 dark:text-black px-6 py-2">{`$${item.price}`}</span>
+                <input
+                  type="number"
+                  value={item.quantity}
+                  onChange={(e) => handleQuantityChange(e, item.id)}
+                  min="1"
+                  className="border border-gray-300 rounded-md px-2 py-1 ml-4 w-16"
+                />
+                <button
+                  className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 ml-4"
+                  onClick={() => handleRemoveFromCart(item.id)}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  </div>
+))}
