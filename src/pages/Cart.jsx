@@ -17,148 +17,181 @@ const Cart = () => {
   });
   const [cart, setCart] = useState([]);
 
-  const priceOf = async (id) => {
+  const fetchProduct=async (id)=>{
     try {
-      const res = await fetch(`/api/products/${id}`);
-      if (res.ok) {
-        const data = await res.json();
-        return { ...data, id: parseInt(id) };
-      } else {
+      const res = await fetch('/api/user/product', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId:id })
+      });
+      
+      if (!res.ok) {
         throw new Error('Failed to fetch product');
       }
-    } catch (error) {
-      console.log('Error fetching data', error);
-      return null;
-    }
-  };
+  
+      const data = await res.json();
+      return data.product;
+    }catch (error) {   
+      // window.location='/404';   
+    console.log('Error fetching data', error);
+    return ;
+  } 
+  }
+
+  // const priceOf = async (id) => {
+  //   try {
+  //     const res = await fetch(`/api/products/${id}`);
+  //     if (res.ok) {
+  //       const data = await res.json();
+  //       return { ...data, id: parseInt(id) };
+  //     } else {
+  //       throw new Error('Failed to fetch product');
+  //     }
+  //   } catch (error) {
+  //     console.log('Error fetching data', error);
+  //     return null;
+  //   }
+  // };
 
   useEffect(() => {
-    const calculateTotalPrice = async () => {
-      if (!User) {
-        return navigate('/Login');
-      } else {
-        const cartItems = [];
-        for (const [productId, quantity] of Object.entries(User.cart)) {
-          const product = await priceOf(productId);
-          if (product) {
-            cartItems.push({ ...product, quantity: parseInt(quantity) });
-          }
+    if (!User) {
+      return navigate('/Login');
+    }
+  
+    const fetchCartItems = async () => {
+      try {
+        const apiUrl = '/api/getCart';
+        const res = await fetch(apiUrl);
+        if (!res.ok) {
+          throw new Error('Failed to fetch cart');
         }
-
-        let TPrice = 0;
-        for (const item of cartItems) {
-          TPrice += item.price * item.quantity;
-        }
-        setCart(cartItems);
-        setTotalPrice(TPrice);
+        const data = await res.json();
+        const cartItems = data.cartItems;
+  
+        // Fetch product details for each cart item concurrently
+        const productPromises = cartItems.map((cartItem) => fetchProduct(cartItem.productId));
+        const products = await Promise.all(productPromises);
+  
+        // Combine cart items with product details
+        const itemsWithProducts = cartItems.map((cartItem, index) => ({
+          ...cartItem,
+          product: products[index], // Assuming the order matches
+        }));
+  
+        setCart(itemsWithProducts);
+      } catch (error) {
+        console.error('Error fetching cart', error);
       }
     };
+  
+    fetchCartItems();
+  }, [User, navigate, fetchProduct]);
+  
 
-    calculateTotalPrice();
-  }, [User, navigate]);
+  // const handleCheckout = () => {
+  //   setShowCheckout(true);
+  // };
 
-  const handleCheckout = () => {
-    setShowCheckout(true);
-  };
+  // const handlePaymentMethodSelect = (method) => {
+  //   setPaymentMethod(method);
+  // };
 
-  const handlePaymentMethodSelect = (method) => {
-    setPaymentMethod(method);
-  };
+  // const handleCreditCardInfoChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setCreditCardInfo((prevInfo) => ({
+  //     ...prevInfo,
+  //     [name]: value,
+  //   }));
+  // };
 
-  const handleCreditCardInfoChange = (e) => {
-    const { name, value } = e.target;
-    setCreditCardInfo((prevInfo) => ({
-      ...prevInfo,
-      [name]: value,
-    }));
-  };
+  // const handleRemoveFromCart = async (id) => {
+  //   if (!User) {
+  //     return navigate('/Login');
+  //   }
 
-  const handleRemoveFromCart = async (id) => {
-    if (!User) {
-      return navigate('/Login');
-    }
+  //   const confirm = window.confirm('Are you sure you want to delete this product?');
 
-    const confirm = window.confirm('Are you sure you want to delete this product?');
+  //   if (!confirm) return;
 
-    if (!confirm) return;
+  //   const newCart = { ...User.cart };
 
-    const newCart = { ...User.cart };
+  //   if (!(id in newCart)) {
+  //     return navigate('/Cart');
+  //   }
 
-    if (!(id in newCart)) {
-      return navigate('/Cart');
-    }
+  //   delete newCart[id];
 
-    delete newCart[id];
+  //   const updateCart = {
+  //     cart: newCart,
+  //   };
 
-    const updateCart = {
-      cart: newCart,
-    };
+  //   const res = await fetch(`/api/users/${User.id}`, {
+  //     method: 'PATCH',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(updateCart),
+  //   });
 
-    const res = await fetch(`/api/users/${User.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateCart),
-    });
+  //   if (res.ok) {
+  //     const updatedUser = { ...User, cart: newCart };
+  //     setUser(updatedUser);
 
-    if (res.ok) {
-      const updatedUser = { ...User, cart: newCart };
-      setUser(updatedUser);
+  //     toast.success('Product removed from the cart successfully');
+  //   } else {
+  //     toast.error('Failed to remove product from the cart');
+  //   }
+  //   return navigate('/Cart');
+  // };
 
-      toast.success('Product removed from the cart successfully');
-    } else {
-      toast.error('Failed to remove product from the cart');
-    }
-    return navigate('/Cart');
-  };
+  // const handleQuantityChange = (e, productId) => {
+  //   const newQuantity = parseInt(e.target.value);
+  //   if (newQuantity < 1) {
+  //     return;
+  //   }
 
-  const handleQuantityChange = (e, productId) => {
-    const newQuantity = parseInt(e.target.value);
-    if (newQuantity < 1) {
-      return;
-    }
+  //   const updatedCart = { ...User.cart, [productId]: newQuantity.toString() };
+  //   const updatedUser = { ...User, cart: updatedCart };
+  //   setUser(updatedUser);
 
-    const updatedCart = { ...User.cart, [productId]: newQuantity.toString() };
-    const updatedUser = { ...User, cart: updatedCart };
-    setUser(updatedUser);
+  //   updateCartInServer(updatedCart);
+  // };
 
-    updateCartInServer(updatedCart);
-  };
+  // const handleCompletedCheckout = async () => {
+  //   if (!User) {
+  //     return navigate('/Login');
+  //   }
 
-  const handleCompletedCheckout = async () => {
-    if (!User) {
-      return navigate('/Login');
-    }
+  //   const confirm = window.confirm('Are you sure you want to complete this order?');
 
-    const confirm = window.confirm('Are you sure you want to complete this order?');
+  //   if (!confirm) return;
 
-    if (!confirm) return;
+  //   const newCart = {};
 
-    const newCart = {};
+  //   const updateCart = {
+  //     cart: newCart,
+  //   };
 
-    const updateCart = {
-      cart: newCart,
-    };
+  //   const res = await fetch(`/api/users/${User.id}`, {
+  //     method: 'PATCH',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(updateCart),
+  //   });
 
-    const res = await fetch(`/api/users/${User.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateCart),
-    });
+  //   if (res.ok) {
+  //     const updatedUser = { ...User, cart: newCart };
+  //     setUser(updatedUser);
 
-    if (res.ok) {
-      const updatedUser = { ...User, cart: newCart };
-      setUser(updatedUser);
-
-      toast.success('Your order has been placed successfully. Thank you for your purchase!');
-    } else {
-      toast.error('Failed to place the order. Please try again later.');
-    }
-    return navigate('/');
-  };
+  //     toast.success('Your order has been placed successfully. Thank you for your purchase!');
+  //   } else {
+  //     toast.error('Failed to place the order. Please try again later.');
+  //   }
+  //   return navigate('/');
+  // };
 
   const checkoutTransitionStyles = {
     transition: 'transform 1s ease-in-out',
@@ -176,11 +209,11 @@ const Cart = () => {
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 bg-white border-b border-gray-200">
               <h1 className="text-4xl font-semibold mb-4">Shopping Cart</h1>
-              {cart.length === 0 ? (
+              {cart.cartItems.length === 0 ? (
                 <p>Your cart is empty.</p>
               ) : (
                 <>
-                  {cart.map((item, index) => (
+                   {cart.map((item, index) => (
                     <div key={index} className="border-b border-gray-200 mb-4 pb-4 ">
                       <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-white dark:border-zinc-300 w-500 " style={{ width: '600px' }}>
                         <div className="flex items-center justify-between">
@@ -191,9 +224,9 @@ const Cart = () => {
                             style={{ width: '110px', height: '110px' }}
                           />
                           <div className="px-5">
-                          <Link to={`/Products/${item.id}`} className="text-blue-900 hover:underline">
+                          <Link to={`/Products/${item.productId}`} className="text-blue-900 hover:underline">
                             <h5 className="text-xl font-semibold tracking-tight px-6 py-2">
-                              {item.name.length > 20 ? item.name.substring(0, 18) + '...' : item.name}
+                              {item.productName.length > 20 ? item.productName.substring(0, 18) + '...' : item.productName}
                             </h5>
                             </Link>
                             <div className="flex items-center justify-start">
@@ -201,13 +234,13 @@ const Cart = () => {
                               <input
                                 type="number"
                                 value={item.quantity}
-                                onChange={(e) => handleQuantityChange(e, item.id)}
+                                onChange={(e) => handleQuantityChange(e, item.productId)}
                                 min="1"
                                 className="border border-gray-300 rounded-md px-2 py-1 ml-4 w-16"
                               />
                               <button
                                 className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 ml-4"
-                                onClick={() => handleRemoveFromCart(item.id)}
+                                onClick={() => handleRemoveFromCart(item.productId)}
                               >
                                 Remove
                               </button>
