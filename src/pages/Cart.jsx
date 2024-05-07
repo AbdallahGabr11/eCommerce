@@ -59,7 +59,6 @@ const Cart = () => {
     if (!User) {
       return navigate('/Login');
     }
-
   
     const fetchCartItems = async () => {
       try {
@@ -76,11 +75,11 @@ const Cart = () => {
         const products = await Promise.all(productPromises);
   
         // Combine cart items with product details
-        // const itemsWithProducts = cartItems.map((cartItem, index) => ({
-        //   ...cartItem,
-        //   product: products[index], // Assuming the order matches
-        // }));
-  
+        const itemsWithProducts = cartItems.map((cartItem, index) => ({
+          ...cartItem,
+          product: products[index], // Assuming the order matches
+        }));
+        console.log(itemsWithProducts)
         setCart(itemsWithProducts);
       } catch (error) {
         console.error('Error fetching cart', error);
@@ -88,111 +87,112 @@ const Cart = () => {
     };
   
     fetchCartItems();
-  }, [User, navigate, fetchProduct]);
+  }, [User, navigate]);
+  
   
 
-  // const handleCheckout = () => {
-  //   setShowCheckout(true);
-  // };
+  const handleCheckout = () => {
+    setShowCheckout(true);
+  };
 
-  // const handlePaymentMethodSelect = (method) => {
-  //   setPaymentMethod(method);
-  // };
+  const handlePaymentMethodSelect = (method) => {
+    setPaymentMethod(method);
+  };
 
-  // const handleCreditCardInfoChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setCreditCardInfo((prevInfo) => ({
-  //     ...prevInfo,
-  //     [name]: value,
-  //   }));
-  // };
+  const handleCreditCardInfoChange = (e) => {
+    const { name, value } = e.target;
+    setCreditCardInfo((prevInfo) => ({
+      ...prevInfo,
+      [name]: value,
+    }));
+  };
 
-  // const handleRemoveFromCart = async (id) => {
-  //   if (!User) {
-  //     return navigate('/Login');
-  //   }
+  const handleRemoveFromCart = async (id) => {
+    if (!User) {
+      return navigate('/Login');
+    }
 
-  //   const confirm = window.confirm('Are you sure you want to delete this product?');
+    const confirm = window.confirm('Are you sure you want to delete this product?');
 
-  //   if (!confirm) return;
+    if (!confirm) return;
 
-  //   const newCart = { ...User.cart };
+    // const newCart = { ...User.cart };
 
-  //   if (!(id in newCart)) {
-  //     return navigate('/Cart');
-  //   }
+    // if (!(id in newCart)) {
+    //   return navigate('/Cart');
+    // }
 
-  //   delete newCart[id];
+    // delete newCart[id];
 
-  //   const updateCart = {
-  //     cart: newCart,
-  //   };
+    // const updateCart = {
+    //   cart: newCart,
+    // };
 
-  //   const res = await fetch(`/api/users/${User.id}`, {
-  //     method: 'PATCH',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(updateCart),
-  //   });
+    // const res = await fetch(`/api/users/${User.id}`, {
+    //   method: 'PATCH',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(updateCart),
+    // });
 
-  //   if (res.ok) {
-  //     const updatedUser = { ...User, cart: newCart };
-  //     setUser(updatedUser);
+    // if (res.ok) {
+    //   const updatedUser = { ...User, cart: newCart };
+    //   setUser(updatedUser);
 
-  //     toast.success('Product removed from the cart successfully');
-  //   } else {
-  //     toast.error('Failed to remove product from the cart');
-  //   }
-  //   return navigate('/Cart');
-  // };
+    //   toast.success('Product removed from the cart successfully');
+    // } else {
+    //   toast.error('Failed to remove product from the cart');
+    // }
+    // return navigate('/Cart');
+  };
 
-  // const handleQuantityChange = (e, productId) => {
-  //   const newQuantity = parseInt(e.target.value);
-  //   if (newQuantity < 1) {
-  //     return;
-  //   }
+  const handleQuantityChange = (e, productId) => {
+    // const newQuantity = parseInt(e.target.value);
+    // if (newQuantity < 1) {
+    //   return;
+    // }
 
-  //   const updatedCart = { ...User.cart, [productId]: newQuantity.toString() };
-  //   const updatedUser = { ...User, cart: updatedCart };
-  //   setUser(updatedUser);
+    // const updatedCart = { ...User.cart, [productId]: newQuantity.toString() };
+    // const updatedUser = { ...User, cart: updatedCart };
+    // setUser(updatedUser);
 
-  //   updateCartInServer(updatedCart);
-  // };
+    // updateCartInServer(updatedCart);
+  };
 
-  // const handleCompletedCheckout = async () => {
-  //   if (!User) {
-  //     return navigate('/Login');
-  //   }
+  const handleCompletedCheckout = async () => {
+    if (!User) {
+      return navigate('/Login');
+    }
 
-  //   const confirm = window.confirm('Are you sure you want to complete this order?');
+    const confirm = window.confirm('Are you sure you want to complete this order?');
 
-  //   if (!confirm) return;
+    if (!confirm) return;
 
-  //   const newCart = {};
+    // const newCart = {};
 
-  //   const updateCart = {
-  //     cart: newCart,
-  //   };
+    // const updateCart = {
+    //   cart: newCart,
+    // };
 
-  //   const res = await fetch(`/api/users/${User.id}`, {
-  //     method: 'PATCH',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(updateCart),
-  //   });
+    // const res = await fetch(`/api/users/${User.id}`, {
+    //   method: 'PATCH',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(updateCart),
+    // });
 
-  //   if (res.ok) {
-  //     const updatedUser = { ...User, cart: newCart };
-  //     setUser(updatedUser);
+    // if (res.ok) {
+    //   const updatedUser = { ...User, cart: newCart };
+    //   setUser(updatedUser);
 
-  //     toast.success('Your order has been placed successfully. Thank you for your purchase!');
-  //   } else {
-  //     toast.error('Failed to place the order. Please try again later.');
-  //   }
-  //   return navigate('/');
-  // };
+    //   toast.success('Your order has been placed successfully. Thank you for your purchase!');
+    // } else {
+    //   toast.error('Failed to place the order. Please try again later.');
+    // }
+    // return navigate('/');
+  };
 
   const checkoutTransitionStyles = {
     transition: 'transform 1s ease-in-out',
@@ -210,7 +210,7 @@ const Cart = () => {
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 bg-white border-b border-gray-200">
               <h1 className="text-4xl font-semibold mb-4">Shopping Cart</h1>
-              {cart.length === 0 ? (
+              { 0 ? (
                 <p>Your cart is empty.</p>
               ) : (
                 <>
@@ -220,28 +220,28 @@ const Cart = () => {
                         <div className="flex items-center justify-between">
                           <img
                             className="p-4"
-                            src={item.image}
+                            src={item.product.productImageUrl}
                             alt="product image"
                             style={{ width: '110px', height: '110px' }}
                           />
                           <div className="px-5">
-                          <Link to={`/Products/${item.productId}`} className="text-blue-900 hover:underline">
+                          <Link to={`/Products/${item.product.productId}`} className="text-blue-900 hover:underline">
                             <h5 className="text-xl font-semibold tracking-tight px-6 py-2">
-                              {item.productName.length > 20 ? item.productName.substring(0, 18) + '...' : item.productName}
+                              {item.product.productName.length > 20 ? item.product.productName.substring(0, 18) + '...' : item.product.productName}
                             </h5>
                             </Link>
                             <div className="flex items-center justify-start">
-                              <span className="text-2xl font-bold text-gray-900 dark:text-black px-6 py-2">{`$${item.price}`}</span>
+                              <span className="text-2xl font-bold text-gray-900 dark:text-black px-6 py-2">{`$${item.product.price}`}</span>
                               <input
                                 type="number"
-                                value={item.quantity}
-                                onChange={(e) => handleQuantityChange(e, item.productId)}
+                                value={item.product.quantity}
+                                onChange={(e) => handleQuantityChange(e, item.product.productId)}
                                 min="1"
                                 className="border border-gray-300 rounded-md px-2 py-1 ml-4 w-16"
                               />
                               <button
                                 className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 ml-4"
-                                onClick={() => handleRemoveFromCart(item.productId)}
+                                onClick={() => handleRemoveFromCart(item.product.productId)}
                               >
                                 Remove
                               </button>
