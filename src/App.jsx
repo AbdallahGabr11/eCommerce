@@ -149,11 +149,10 @@ const App = () => {
           const res = await fetch(apiUrl);
         const data = await res.json();
         
-        setItemCount(data.itemCount);
+        return data.itemCount;
         
-
         }else{
-          setItemCount(0);
+          return 0;
         }
         
       } catch (error) {
