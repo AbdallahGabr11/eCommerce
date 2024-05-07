@@ -2,25 +2,20 @@ import { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import logo from '../assets/images/logo3.png';
 import CartIcon from './CartIcon';
-import { userContext } from '../App';
+import { userContext,itemCountContext } from '../App';
 
 const Navbar = () => {
   const [user, setUser] = useContext(userContext);
-  const [itemCount, setItemCount] = useState(0);
+  const [itemCount, setItemCount] = useContext( itemCountContext);
 
   useEffect( () => {
-
-
     const fetchCart = async () => {
       const apiUrl = '/api/getCart'; 
       try {
         if(user){
           const res = await fetch(apiUrl);
         const data = await res.json();
-        
         setItemCount(data.itemCount);
-        
-
         }else{
           setItemCount(0);
         }
