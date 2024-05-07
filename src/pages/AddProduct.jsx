@@ -43,11 +43,7 @@ const AddProduct = ({addProduct, fetchProducts}) => {
       try {
         await addProduct(newProduct);
         toast.success('Product Added Successfully');
-<<<<<<< Updated upstream
-        await setProducts(fetchProducts());
-=======
          setProducts(fetchProducts());
->>>>>>> Stashed changes
         navigate('/Admin');
       } catch (error) {
         console.error('Error adding product:', error);

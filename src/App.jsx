@@ -142,9 +142,6 @@ const App = () => {
       }
     };
 
-<<<<<<< Updated upstream
-    
-=======
     const fetchCart = async () => {
       const apiUrl = '/api/getCart'; 
       try {
@@ -163,7 +160,6 @@ const App = () => {
         console.log('Error fetching Cart', error);
       }
     };
->>>>>>> Stashed changes
 
   const router = createBrowserRouter(
     createRoutesFromElements(
