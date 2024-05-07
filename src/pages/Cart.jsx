@@ -10,52 +10,80 @@ const Cart = () => {
   const [showCheckout, setShowCheckout] = useState(false);
   const [totalPrice, setTotalPrice] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [showInvalidMessage, setShowInvalidMessage] = useState(""); 
+
   const [creditCardInfo, setCreditCardInfo] = useState({
     cardNumber: '',
     expiryDate: '',
     cvv: '',
   });
+
+  const [cardNumber, setCardNumber] = useState();
+  const [expiryDate, setExpiryDate] = useState();
+  const [cvv, setCvv] = useState();
+
   const [cart, setCart] = useState([]);
 
-  const priceOf = async (id) => {
+  const fetchProduct=async (id)=>{
     try {
-      const res = await fetch(`/api/products/${id}`);
-      if (res.ok) {
-        const data = await res.json();
-        return { ...data, id: parseInt(id) };
-      } else {
+      const res = await fetch('/api/user/product', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId:id })
+      });
+      
+      if (!res.ok) {
         throw new Error('Failed to fetch product');
       }
-    } catch (error) {
-      console.log('Error fetching data', error);
-      return null;
-    }
-  };
+  
+      const data = await res.json();
+      return data.product;
+    }catch (error) {   
+      // window.location='/404';   
+    console.log('Error fetching data', error);
+    return ;
+  } 
+  }
+
 
   useEffect(() => {
-    const calculateTotalPrice = async () => {
-      if (!User) {
-        return navigate('/Login');
-      } else {
-        const cartItems = [];
-        for (const [productId, quantity] of Object.entries(User.cart)) {
-          const product = await priceOf(productId);
-          if (product) {
-            cartItems.push({ ...product, quantity: parseInt(quantity) });
-          }
+    if (!User) {
+      return navigate('/Login');
+    }
+  
+    const fetchCartItems = async () => {
+      try {
+        const apiUrl = '/api/getCart';
+        const res = await fetch(apiUrl);
+        if (!res.ok) {
+          throw new Error('Failed to fetch cart');
         }
-
-        let TPrice = 0;
-        for (const item of cartItems) {
-          TPrice += item.price * item.quantity;
-        }
-        setCart(cartItems);
-        setTotalPrice(TPrice);
+        const data = await res.json();
+        const cartItems = data.cartItems;
+        setTotalPrice(data.cart.totalPrice);
+  
+        // Fetch product details for each cart item concurrently
+        const productPromises = cartItems.map((cartItem) => fetchProduct(cartItem.productId));
+        const products = await Promise.all(productPromises);
+  
+        // Combine cart items with product details
+        const itemsWithProducts = cartItems.map((cartItem, index) => ({
+          ...cartItem,
+          product: products[index], // Assuming the order matches
+        }));
+        console.log(itemsWithProducts)
+        setCart(itemsWithProducts);
+      } catch (error) {
+        console.error('Error fetching cart', error);
       }
     };
-
-    calculateTotalPrice();
+  
+    fetchCartItems();
   }, [User, navigate]);
+  
+  
 
   const handleCheckout = () => {
     setShowCheckout(true);
@@ -73,7 +101,7 @@ const Cart = () => {
     }));
   };
 
-  const handleRemoveFromCart = async (id) => {
+  const handleRemoveFromCart = async (id,index) => {
     if (!User) {
       return navigate('/Login');
     }
@@ -82,48 +110,40 @@ const Cart = () => {
 
     if (!confirm) return;
 
-    const newCart = { ...User.cart };
+    delete cart.cartItems[index];
 
-    if (!(id in newCart)) {
-      return navigate('/Cart');
-    }
-
-    delete newCart[id];
-
-    const updateCart = {
-      cart: newCart,
-    };
-
-    const res = await fetch(`/api/users/${User.id}`, {
-      method: 'PATCH',
+    const res = await fetch(`/deleteItem/${id}`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(updateCart),
+      body: JSON.stringify(product),
     });
 
     if (res.ok) {
-      const updatedUser = { ...User, cart: newCart };
-      setUser(updatedUser);
-
-      toast.success('Product removed from the cart successfully');
-    } else {
-      toast.error('Failed to remove product from the cart');
-    }
-    return navigate('/Cart');
+        toast.success('Product removed from the cart successfully');
+        
+      } else {
+        toast.error('Failed to remove product from the cart');
+      }
+      setTimeout(()=>{
+        return navigate('/Cart');
+      },100);
   };
 
-  const handleQuantityChange = (e, productId) => {
+  const handleQuantityChange = (e, price ,index) => {
     const newQuantity = parseInt(e.target.value);
     if (newQuantity < 1) {
       return;
     }
+      q=newQuantity-cart[index].quantity;
+      setTotalPrice(totalPrice+q*price);
+      cart[index].quantity=newQuantity;
+    // const updatedCart = { ...User.cart, [productId]: newQuantity.toString() };
+    // const updatedUser = { ...User, cart: updatedCart };
+    // setUser(updatedUser);
 
-    const updatedCart = { ...User.cart, [productId]: newQuantity.toString() };
-    const updatedUser = { ...User, cart: updatedCart };
-    setUser(updatedUser);
-
-    updateCartInServer(updatedCart);
+    // updateCartInServer(updatedCart);
   };
 
   const handleCompletedCheckout = async () => {
@@ -135,29 +155,35 @@ const Cart = () => {
 
     if (!confirm) return;
 
-    const newCart = {};
-
-    const updateCart = {
-      cart: newCart,
+    const checkoutCart = {
+      cardNumber:creditCardInfo.cardNumber,
+      expiryDate:creditCardInfo.expiryDate,
+      cvv:creditCardInfo.cvv,
     };
 
-    const res = await fetch(`/api/users/${User.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateCart),
-    });
-
-    if (res.ok) {
-      const updatedUser = { ...User, cart: newCart };
-      setUser(updatedUser);
-
-      toast.success('Your order has been placed successfully. Thank you for your purchase!');
+    try {
+      const res = await fetch('/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(checkoutCart),
+      });
+      if (res.ok) {
+        toast.success('Successful Checkout');
+        navigate('/');
     } else {
-      toast.error('Failed to place the order. Please try again later.');
+        // If response status indicates an error, handle it here
+        const errorData = await res.json(); // Parse the response JSON
+        const errorMessage = errorData.error; // Extract the error message
+        setShowInvalidMessage(errorMessage);
+        console.log(errorMessage);
     }
-    return navigate('/');
+      return navigate('/');
+    } catch (error) {
+      console.log('Error fetching Checkout', error);
+      return;
+    }
   };
 
   const checkoutTransitionStyles = {
@@ -165,9 +191,9 @@ const Cart = () => {
     transform: 'translateX(0)',
   };
 
-  const updateCartInServer = async (updatedCart) => {
-    // Implement logic to update cart in the server
-  };
+  // const updateCartInServer = async (updatedCart) => {
+  //   // Implement logic to update cart in the server
+  // };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -176,38 +202,38 @@ const Cart = () => {
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 bg-white border-b border-gray-200">
               <h1 className="text-4xl font-semibold mb-4">Shopping Cart</h1>
-              {cart.length === 0 ? (
+              { 0 ? (
                 <p>Your cart is empty.</p>
               ) : (
                 <>
-                  {cart.map((item, index) => (
+                   {cart.map((item, index) => (
                     <div key={index} className="border-b border-gray-200 mb-4 pb-4 ">
                       <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-white dark:border-zinc-300 w-500 " style={{ width: '600px' }}>
                         <div className="flex items-center justify-between">
                           <img
                             className="p-4"
-                            src={item.image}
+                            src={item.product.productImageUrl}
                             alt="product image"
                             style={{ width: '110px', height: '110px' }}
                           />
                           <div className="px-5">
-                          <Link to={`/Products/${item.id}`} className="text-blue-900 hover:underline">
+                          <Link to={`/Products/${item.product.productId}`} className="text-blue-900 hover:underline">
                             <h5 className="text-xl font-semibold tracking-tight px-6 py-2">
-                              {item.name.length > 20 ? item.name.substring(0, 18) + '...' : item.name}
+                              {item.product.productName.length > 20 ? item.product.productName.substring(0, 18) + '...' : item.product.productName}
                             </h5>
                             </Link>
                             <div className="flex items-center justify-start">
-                              <span className="text-2xl font-bold text-gray-900 dark:text-black px-6 py-2">{`$${item.price}`}</span>
+                              <span className="text-2xl font-bold text-gray-900 dark:text-black px-6 py-2">{`$${item.product.price}`}</span>
                               <input
                                 type="number"
                                 value={item.quantity}
-                                onChange={(e) => handleQuantityChange(e, item.id)}
+                                onChange={(e) => handleQuantityChange(e, item.product.price, index)}
                                 min="1"
                                 className="border border-gray-300 rounded-md px-2 py-1 ml-4 w-16"
                               />
                               <button
                                 className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 ml-4"
-                                onClick={() => handleRemoveFromCart(item.id)}
+                                onClick={() => handleRemoveFromCart(item.product.productId, index)}
                               >
                                 Remove
                               </button>
@@ -293,6 +319,14 @@ const Cart = () => {
           />
         </div>
       )}
+                    {showInvalidMessage!="" && ( // Conditionally render invalid message
+                                <p className="text-sm font-light text-red-600 font-semibold dark:text-red-700">
+                                    {/* Invalid email or password */}
+                                    {showInvalidMessage}
+                                    {console.log(showInvalidMessage)}
+                                    
+                                </p>
+                            )}
       {/* Checkout button */}
       <button disabled={!paymentMethod} onClick={handleCompletedCheckout} className={`bg-zinc-800 hover:bg-zinc-900 text-white px-4 py-2 mt-4 font-medium rounded-lg ${!paymentMethod ? 'opacity-50 cursor-not-allowed' : ''}`}>
         Checkout
