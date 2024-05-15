@@ -1,6 +1,6 @@
 # ECommerce
 
-<img src="public/screen.png" />
+<img src="public/Screen.png" />
 
 ## Usage
 
